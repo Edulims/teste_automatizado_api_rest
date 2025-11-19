@@ -20,25 +20,27 @@ describe('Teste de API - Produtos', () => {
     })
   });
 
-  it.only('Cadastrar produto - POST', () => {
+  it('Cadastrar produto com SUCESSO - POST', () => {
     
     let produto = "Produto Teste " + Math.floor(Math.random() * 10000000)
-    cy.request({
-      method: 'POST',
-      url: 'produtos',
-      headers: {authorization: token},
-      body: {
-        "nome": produto,
-        "preco": 15,
-        "descricao": "cabo usb tipo c",
-        "quantidade": 100
-      }
-      
-    }).should((response) => {
+     cy.cadastrarProduto(token, produto, 99, 'produto teste', 100)
+    .should((response) => {
       expect(response.status).equal(201)
       expect(response.body.message).equal("Cadastro realizado com sucesso")
     })
 
   });
+
+  it('Deve validar mensagem de produto cadastrado anteriomente' ,() => {
+     cy.cadastrarProduto(token, 'Cabo USB 001', 10, 'Cabo USB tipo c', 100)
+    .should((response) => {
+      expect(response.status).equal(400)
+      expect(response.body.message).equal("Já existe produto com esse nome")
+    })
+
+  });
+
+
+
 
 })
