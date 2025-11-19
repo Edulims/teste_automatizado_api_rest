@@ -1,6 +1,14 @@
 /// <reference types= "cypress"/>
 
 describe('Teste de API - Produtos', () => {
+
+  let token
+  beforeEach(() => {
+    cy.token('fulano@qa.com', 'teste').then(tkn => {
+      token = tkn
+    }) 
+  });
+
   it('Deve listar produtos cadastrados', () => {
     cy.request({
       method: 'GET',
@@ -13,13 +21,14 @@ describe('Teste de API - Produtos', () => {
   });
 
   it.only('Cadastrar produto - POST', () => {
-    let token = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImZ1bGFub0BxYS5jb20iLCJwYXNzd29yZCI6InRlc3RlIiwiaWF0IjoxNzYzMzk5MjU3LCJleHAiOjE3NjMzOTk4NTd9.VHW53zPjKhZTpgTDYOdsUO0VJhY3EJePJWH-Ss_i0JM"
+    
+    let produto = "Produto Teste " + Math.floor(Math.random() * 10000000)
     cy.request({
       method: 'POST',
       url: 'produtos',
       headers: {authorization: token},
       body: {
-        "nome": "Cabo USB 001",
+        "nome": produto,
         "preco": 15,
         "descricao": "cabo usb tipo c",
         "quantidade": 100
